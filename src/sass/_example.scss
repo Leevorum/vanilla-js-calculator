@@ -1,59 +1,70 @@
-
+.container {
+  position: absolute;
+  z-index: 9;
+}
 .calculator {
-    width: 240px;
-    color: white;
-    font-size: 24;
-    cursor: move;
+  width: 240px;
+  color: white;
+  font-size: 24;
+  background-color: rgba(128, 128, 128, 1);
+  border-radius: 10px;
+  cursor: move;
+  z-index: 10;
 }
 
-.view-wrapper{
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding-right: 8px;
-    font-size: 40;
-    height: 70px;
-    background-color: rgba(87, 81, 87, 1.0);
+.view-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  font-size: 40;
+  height: 70px;
+  border-radius: 10px;
+  background-color: rgba(87, 81, 87, 1);
 }
 
-
-.wrapper{
-    display: flex;
-    position: relative;
-    
+.wrapper {
+  display: flex;
+  position: relative;
 }
-.calculator-numbers{
-    display: flex;
-    flex-wrap: wrap;
-    width: 180px;
-    height: 240px;
+.calculator-numbers {
+  display: flex;
+  flex-wrap: wrap;
+  width: 180px;
+  height: 240px;
 }
-.button{
-    color: white;
-    background-color: rgba(128, 128, 128, 1.0);
-    width: 60px;
-    height: 60px;
+.button {
+  color: white;
+  background-color: rgba(128, 128, 128, 1);
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
 }
-.zero-btn{
-    width: 120px;
+.zero-btn {
+  width: 120px;
 }
-.btn-wrapper{
-      
-    width: 60px;
-    height: 60px;
- 
+.btn-wrapper {
+  width: 60px;
+  height: 60px;
 }
-.lowerBtnsWrapper{
-    display: flex;
-    justify-content: space-between;
-    width: 180px;
+.upper-functions .button {
+  background-color: rgb(104, 104, 104);
+}
+.right-functions .button {
+  background-color: rgb(242, 163, 60);
 }
 
-.upper-functions{
-    display: flex;
+.lowerBtnsWrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 180px;
 }
-.right-functions{
-    position: absolute;
-    left: 180px;
-    top:0px
+
+.upper-functions {
+  display: flex;
+}
+.right-functions {
+  position: absolute;
+  left: 180px;
+  top: 0px;
 }

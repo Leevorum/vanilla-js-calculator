@@ -1,5 +1,7 @@
 function getRefs() {
   return {
+    container: document.querySelector('.container'),
+    calculator: document.querySelector('.calculator'),
     calcFirstNumber: document.querySelector('.calculator-first-number'),
     calcSecondNumber: document.querySelector('.calculator-second-number'),
     calcSign: document.querySelector('.calculator-sign'),
