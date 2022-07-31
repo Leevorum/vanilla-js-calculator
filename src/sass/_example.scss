@@ -3,9 +3,9 @@
   z-index: 9;
 }
 .calculator {
-  width: 240px;
+  width: 360px;
   color: white;
-  font-size: 24;
+  font-size: 30;
   background-color: rgba(128, 128, 128, 1);
   border-radius: 10px;
   cursor: move;
@@ -14,13 +14,22 @@
 
 .view-wrapper {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: flex-end;
   padding-right: 8px;
-  font-size: 40;
-  height: 70px;
+  font-size: 52;
+  height: 90px;
   border-radius: 10px;
   background-color: rgba(87, 81, 87, 1);
+}
+.large-font {
+  font-size: 30;
+}
+.medium-font {
+  font-size: 24;
+}
+.small-font {
+  font-size: 16;
 }
 
 .wrapper {
@@ -30,22 +39,22 @@
 .calculator-numbers {
   display: flex;
   flex-wrap: wrap;
-  width: 180px;
-  height: 240px;
+  width: 270px;
+  height: 360px;
 }
 .button {
   color: white;
   background-color: rgba(128, 128, 128, 1);
-  width: 60px;
-  height: 60px;
+  width: 90px;
+  height: 90px;
   border-radius: 10px;
 }
 .zero-btn {
-  width: 120px;
+  width: 180px;
 }
 .btn-wrapper {
-  width: 60px;
-  height: 60px;
+  width: 90px;
+  height: 90px;
 }
 .upper-functions .button {
   background-color: rgb(104, 104, 104);
@@ -57,7 +66,7 @@
 .lowerBtnsWrapper {
   display: flex;
   justify-content: space-between;
-  width: 180px;
+  width: 270px;
 }
 
 .upper-functions {
@@ -65,6 +74,6 @@
 }
 .right-functions {
   position: absolute;
-  left: 180px;
+  left: 270px;
   top: 0px;
 }

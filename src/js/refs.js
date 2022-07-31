@@ -7,6 +7,7 @@ function getRefs() {
     calcSign: document.querySelector('.calculator-sign'),
     calculatorNumbers: document.querySelector('.calculator-numbers'),
     calculatorFunctions: document.querySelector('.calculator-functions'),
+    calculatorViewWrapper: document.querySelector('.view-wrapper'),
   };
 }
 

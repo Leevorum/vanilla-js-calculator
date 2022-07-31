@@ -8,16 +8,22 @@ const {
   calcFirstNumber,
   calcSecondNumber,
   calcSign,
+  calculatorViewWrapper,
 } = getRefs();
 
 let firstNumber = '';
 let secondNumber = '';
 let sign = '';
 let result = '';
+let accumulator = '';
 
 export default function app() {
   calculatorNumbers.addEventListener('click', handleClickNumbers);
   calculatorFunctions.addEventListener('click', handleCkickFunctions);
+}
+
+function parse(str) {
+  return Function(`'use strict'; return (${str})`)();
 }
 
 const handleClickNumbers = evt => {
@@ -25,16 +31,27 @@ const handleClickNumbers = evt => {
     return;
   }
 
-  //Only one dot in calcView
-  if (
-    evt.target.textContent === '.' &&
-    calcFirstNumber.textContent.indexOf('.') >= 0 &&
-    calcSecondNumber.textContent.indexOf('.') >= 0
-  ) {
-    return;
+  if (firstNumber.length + secondNumber.length + result.length > 10) {
+    console.log('maxlenth limit!!!');
+    console.log(firstNumber.length + secondNumber.length + result.length);
+    calculatorViewWrapper.classList.add('large-font');
   }
+  if (firstNumber.length + secondNumber.length + result.length > 20) {
+    console.log('maxlenth limit!!!');
+    console.log(firstNumber.length + secondNumber.length + result.length);
+    calculatorViewWrapper.classList.add('medium-font');
+    calculatorViewWrapper.classList.remove('large-font');
+  }
+  if (firstNumber.length + secondNumber.length + result.length > 28) {
+    console.log('maxlenth limit!!!');
+    console.log(firstNumber.length + secondNumber.length + result.length);
+    calculatorViewWrapper.classList.add('small-font');
+    calculatorViewWrapper.classList.remove('medium-font');
+  }
+  //Only one dot in calcView
+
   //Clear result after Math for new values.
-  if (result !== '') {
+  if (result !== '' && sign === '') {
     clearAll();
   }
   //Set first number if second number and sign are empty
@@ -43,13 +60,29 @@ const handleClickNumbers = evt => {
     if (firstNumber === '') {
       calcFirstNumber.textContent = '';
     }
+    if (
+      evt.target.textContent === '.' &&
+      calcFirstNumber.textContent.indexOf('.') >= 0
+    ) {
+      return;
+    }
     //Set First number
     firstNumber += evt.target.textContent;
     calcFirstNumber.textContent += evt.target.textContent;
   } else {
     //Set second number
+    if (
+      evt.target.textContent === '.' &&
+      calcSecondNumber.textContent.indexOf('.') >= 0
+    ) {
+      return;
+    }
     secondNumber += evt.target.textContent;
     calcSecondNumber.textContent += evt.target.textContent;
+    if (accumulator !== '') {
+      accumulator += sign;
+      accumulator += secondNumber;
+    }
   }
 };
 
@@ -60,19 +93,60 @@ const handleCkickFunctions = evt => {
 
   //Function +-/
   if (evt.target.textContent === '+/-') {
+    if (firstNumber !== '' && secondNumber !== '') {
+      console.log(firstNumber);
+      if (Math.sign(secondNumber) === -1) {
+        secondNumber = String(Math.abs(secondNumber));
+        calcSecondNumber.textContent = secondNumber;
+
+        return;
+      } else {
+        secondNumber = String(-secondNumber);
+        calcSecondNumber.textContent = secondNumber;
+
+        return;
+      }
+    }
     if (Math.sign(firstNumber) === -1) {
-      firstNumber = Math.abs(firstNumber);
+      firstNumber = String(Math.abs(firstNumber));
       calcFirstNumber.textContent = firstNumber;
-      calcSign.textContent = '';
     } else {
-      firstNumber = -firstNumber;
+      firstNumber = String(-firstNumber);
       calcFirstNumber.textContent = firstNumber;
-      calcSign.textContent = '';
     }
     return;
   }
+  //Percents in numbers
+  if (evt.target.textContent === '%') {
+    if (firstNumber !== '' && secondNumber === '') {
+      console.log('work');
+      calcFirstNumber.textContent = (Number(firstNumber) * 1) / 100;
+      result = calcFirstNumber.textContent;
+      firstNumber = calcFirstNumber.textContent;
+      return;
+    } else {
+      calcSecondNumber.textContent = (Number(secondNumber) * 1) / 100;
+      result = calcSecondNumber.textContent;
+      secondNumber = calcSecondNumber.textContent;
+      return;
+    }
+  }
+
   //Set sign
-  if (evt.target.textContent !== '=' && evt.target.textContent !== 'AC') {
+  if (
+    evt.target.textContent !== '=' &&
+    evt.target.textContent !== 'AC' &&
+    evt.target.textContent !== '+/-'
+  ) {
+    //Concat string for multiple math operations
+    if (firstNumber !== '' && secondNumber !== '' && sign !== '') {
+      accumulator = firstNumber + sign + secondNumber;
+      firstNumber = firstNumber + sign + secondNumber;
+
+      secondNumber = '';
+      calcFirstNumber.textContent = firstNumber;
+      calcSecondNumber.textContent = '';
+    }
     sign = evt.target.textContent;
     calcSign.textContent = sign;
     return;
@@ -84,30 +158,50 @@ const handleCkickFunctions = evt => {
     calcSign.textContent = '0';
   }
 
-  //Math
+  //Math;
   if (evt.target.textContent === '=') {
     if (secondNumber === '') secondNumber = firstNumber;
     if (firstNumber === '') firstNumber = '0';
+
+    if (accumulator !== '') {
+      //Multiple math operations
+      result = parse(accumulator);
+      calcFirstNumber.textContent = result;
+      firstNumber = calcFirstNumber.textContent;
+      accumulator = calcFirstNumber.textContent;
+      secondNumber = '';
+      calcSecondNumber.textContent = '';
+      sign = '';
+      calcSign.textContent = '';
+
+      return;
+    }
+
+    //Single math operations
     switch (sign) {
       case '+':
         calcFirstNumber.textContent =
           Number(firstNumber) + Number(secondNumber);
+
         result = calcFirstNumber.textContent;
         break;
       case '-':
         calcFirstNumber.textContent =
           Number(firstNumber) - Number(secondNumber);
+
         result = calcFirstNumber.textContent;
         break;
 
       case '*':
         calcFirstNumber.textContent =
           Number(firstNumber) * Number(secondNumber);
+
         result = calcFirstNumber.textContent;
         break;
       case '%':
         calcFirstNumber.textContent =
           (Number(firstNumber) * Number(secondNumber)) / 100;
+
         result = calcFirstNumber.textContent;
         break;
       case '/':
@@ -118,6 +212,7 @@ const handleCkickFunctions = evt => {
         }
         calcFirstNumber.textContent =
           Number(firstNumber) / Number(secondNumber);
+
         result = calcFirstNumber.textContent;
         break;
 
@@ -125,7 +220,7 @@ const handleCkickFunctions = evt => {
         console.log('Sorry, we are no support this functions');
     }
   }
-  console.log(result);
+
   secondNumber = '';
   calcSecondNumber.textContent = '';
   sign = '';
@@ -138,19 +233,23 @@ const clearAll = () => {
   secondNumber = '';
   sign = '';
   result = '';
+  accumulator = '';
   calcFirstNumber.textContent = '0';
   calcSecondNumber.textContent = '';
   calcSign.textContent = '';
+  calculatorViewWrapper.classList.remove('large-font');
+  calculatorViewWrapper.classList.remove('medium-font');
+  calculatorViewWrapper.classList.remove('small-font');
 };
 
 // Make the DIV element draggable:
 dragElement(container);
 
 function dragElement(elmnt) {
-  var pos1 = 0,
-    pos2 = 0,
-    pos3 = 0,
-    pos4 = 0;
+  let pos1 = 0;
+  let pos2 = 0;
+  let pos3 = 0;
+  let pos4 = 0;
   if (calculator) {
     // if present, the header is where you move the DIV from:
     calculator.onmousedown = dragMouseDown;
@@ -162,6 +261,7 @@ function dragElement(elmnt) {
   function dragMouseDown(e) {
     e = e || window.event;
     e.preventDefault();
+
     // get the mouse cursor position at startup:
     pos3 = e.clientX;
     pos4 = e.clientY;
