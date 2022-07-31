@@ -140,3 +140,22 @@ const clearAll = () => {
   calcSecondNumber.textContent = '';
   calcSign.textContent = '';
 };
+
+function handleDragStart(e) {
+  this.style.opacity = '0.4';
+}
+
+function handleDragEnd(e) {
+  this.style.opacity = '1';
+}
+function handleDrop(e) {
+  e.stopPropagation(); // препятствует перенаправлению в браузере.
+  return false;
+}
+
+let items = document.querySelectorAll('.calculator');
+items.forEach(function(item) {
+  item.addEventListener('dragstart', handleDragStart);
+  item.addEventListener('dragend', handleDragEnd);
+  item.addEventListener('drop', handleDrop);
+});
