@@ -23,7 +23,7 @@ export default function app() {
 }
 
 function parse(str) {
-  return Function(`'use strict'; return (${str})`)();
+  return Function(` return (${str})`)();
 }
 
 const handleClickNumbers = evt => {
@@ -48,9 +48,8 @@ const handleClickNumbers = evt => {
     calculatorViewWrapper.classList.add('small-font');
     calculatorViewWrapper.classList.remove('medium-font');
   }
-  //Only one dot in calcView
 
-  //Clear result after Math for new values.
+  // Clear result after Math for new values.
   if (result !== '' && sign === '') {
     clearAll();
   }
@@ -60,6 +59,7 @@ const handleClickNumbers = evt => {
     if (firstNumber === '') {
       calcFirstNumber.textContent = '';
     }
+    // Only one dot in calcView
     if (
       evt.target.textContent === '.' &&
       calcFirstNumber.textContent.indexOf('.') >= 0
@@ -71,6 +71,7 @@ const handleClickNumbers = evt => {
     calcFirstNumber.textContent += evt.target.textContent;
   } else {
     //Set second number
+    // Only one dot in calcView
     if (
       evt.target.textContent === '.' &&
       calcSecondNumber.textContent.indexOf('.') >= 0
@@ -91,7 +92,7 @@ const handleCkickFunctions = evt => {
     return;
   }
 
-  //Function +-/
+  // Function +-/
   if (evt.target.textContent === '+/-') {
     if (firstNumber !== '' && secondNumber !== '') {
       console.log(firstNumber);
@@ -101,7 +102,7 @@ const handleCkickFunctions = evt => {
 
         return;
       } else {
-        secondNumber = String(-secondNumber);
+        secondNumber = `(${String(-secondNumber)})`;
         calcSecondNumber.textContent = secondNumber;
 
         return;
@@ -111,28 +112,44 @@ const handleCkickFunctions = evt => {
       firstNumber = String(Math.abs(firstNumber));
       calcFirstNumber.textContent = firstNumber;
     } else {
-      firstNumber = String(-firstNumber);
+      firstNumber = `(${String(-firstNumber)})`;
       calcFirstNumber.textContent = firstNumber;
     }
     return;
   }
-  //Percents in numbers
+  // Percents in numbers
   if (evt.target.textContent === '%') {
     if (firstNumber !== '' && secondNumber === '') {
-      console.log('work');
-      calcFirstNumber.textContent = (Number(firstNumber) * 1) / 100;
-      result = calcFirstNumber.textContent;
+      // console.log((parse(firstNumber) * 1) / 100);
+      // calcFirstNumber.textContent = (Number(firstNumber) * 1) / 100;
+      if (Math.sign(parse(firstNumber)) === -1) {
+        console.log('this');
+        firstNumber = `(${(parse(firstNumber) * 1) / 100})`;
+        calcFirstNumber.textContent = firstNumber;
+        // result = calcFirstNumber.textContent;
+        return;
+      }
+      calcFirstNumber.textContent = (parse(firstNumber) * 1) / 100;
+      // result = calcFirstNumber.textContent;
       firstNumber = calcFirstNumber.textContent;
       return;
     } else {
-      calcSecondNumber.textContent = (Number(secondNumber) * 1) / 100;
-      result = calcSecondNumber.textContent;
+      if (Math.sign(parse(secondNumber)) === -1) {
+        console.log('this');
+        secondNumber = `(${(parse(secondNumber) * 1) / 100})`;
+        calcSecondNumber.textContent = secondNumber;
+        // result = calcSecondNumber.textContent;
+        return;
+      }
+      // calcSecondNumber.textContent = (Number(secondNumber) * 1) / 100;
+      calcSecondNumber.textContent = (parse(secondNumber) * 1) / 100;
+      // result = calcSecondNumber.textContent;
       secondNumber = calcSecondNumber.textContent;
       return;
     }
   }
 
-  //Set sign
+  // Set sign
   if (
     evt.target.textContent !== '=' &&
     evt.target.textContent !== 'AC' &&
@@ -152,7 +169,7 @@ const handleCkickFunctions = evt => {
     return;
   }
 
-  //AC button
+  // AC button
   if (evt.target.textContent === 'AC') {
     clearAll();
     calcSign.textContent = '0';
@@ -164,8 +181,10 @@ const handleCkickFunctions = evt => {
     if (firstNumber === '') firstNumber = '0';
 
     if (accumulator !== '') {
-      //Multiple math operations
       result = parse(accumulator);
+      if (!Number.isInteger(result)) {
+        result = result.toFixed(5);
+      }
       calcFirstNumber.textContent = result;
       firstNumber = calcFirstNumber.textContent;
       accumulator = calcFirstNumber.textContent;
@@ -175,49 +194,18 @@ const handleCkickFunctions = evt => {
       calcSign.textContent = '';
 
       return;
-    }
-
-    //Single math operations
-    switch (sign) {
-      case '+':
-        calcFirstNumber.textContent =
-          Number(firstNumber) + Number(secondNumber);
-
-        result = calcFirstNumber.textContent;
-        break;
-      case '-':
-        calcFirstNumber.textContent =
-          Number(firstNumber) - Number(secondNumber);
-
-        result = calcFirstNumber.textContent;
-        break;
-
-      case '*':
-        calcFirstNumber.textContent =
-          Number(firstNumber) * Number(secondNumber);
-
-        result = calcFirstNumber.textContent;
-        break;
-      case '%':
-        calcFirstNumber.textContent =
-          (Number(firstNumber) * Number(secondNumber)) / 100;
-
-        result = calcFirstNumber.textContent;
-        break;
-      case '/':
-        //Prevent js Infinity, when divide by zero.
-        if (secondNumber === '0') {
-          calcFirstNumber.textContent = 'Error';
-          return;
-        }
-        calcFirstNumber.textContent =
-          Number(firstNumber) / Number(secondNumber);
-
-        result = calcFirstNumber.textContent;
-        break;
-
-      default:
-        console.log('Sorry, we are no support this functions');
+    } else {
+      result = parse(firstNumber + sign + secondNumber);
+      if (!Number.isInteger(result)) {
+        result = result.toFixed(5);
+      }
+      calcFirstNumber.textContent = result;
+      firstNumber = calcFirstNumber.textContent;
+      accumulator = calcFirstNumber.textContent;
+      secondNumber = '';
+      calcSecondNumber.textContent = '';
+      sign = '';
+      calcSign.textContent = '';
     }
   }
 
