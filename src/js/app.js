@@ -55,10 +55,14 @@ const handleClickNumbers = evt => {
   }
   //Set first number if second number and sign are empty
   if (secondNumber === '' && sign === '') {
-    //Delete 0 from calcViev
+    //Prevent few 0
     if (firstNumber === '0' && evt.target.textContent === '0') {
       return;
     }
+    if (firstNumber === '0' && evt.target.textContent !== '.') {
+      firstNumber = '';
+    }
+    //Delete 0 from calcViev
     if (firstNumber === '') {
       calcFirstNumber.textContent = '';
     }
@@ -75,14 +79,19 @@ const handleClickNumbers = evt => {
     calcFirstNumber.textContent += evt.target.textContent;
   } else {
     //Set second number
-    // Only one dot in calcView
+
+    //Prevent few 0
     if (secondNumber === '0' && evt.target.textContent === '0') {
       return;
+    }
+    if (secondNumber === '0' && evt.target.textContent !== '.') {
+      secondNumber = '';
     }
     if (
       evt.target.textContent === '.' &&
       calcSecondNumber.textContent.indexOf('.') >= 0
     ) {
+      // Only one dot in calcView
       return;
     }
     secondNumber += evt.target.textContent;
