@@ -56,14 +56,18 @@ const handleClickNumbers = evt => {
   //Set first number if second number and sign are empty
   if (secondNumber === '' && sign === '') {
     //Delete 0 from calcViev
+    if (firstNumber === '0' && evt.target.textContent === '0') {
+      return;
+    }
     if (firstNumber === '') {
       calcFirstNumber.textContent = '';
     }
-    // Only one dot in calcView
+
     if (
       evt.target.textContent === '.' &&
       calcFirstNumber.textContent.indexOf('.') >= 0
     ) {
+      // Only one dot in calcView
       return;
     }
     //Set First number
@@ -72,6 +76,9 @@ const handleClickNumbers = evt => {
   } else {
     //Set second number
     // Only one dot in calcView
+    if (secondNumber === '0' && evt.target.textContent === '0') {
+      return;
+    }
     if (
       evt.target.textContent === '.' &&
       calcSecondNumber.textContent.indexOf('.') >= 0
@@ -177,6 +184,7 @@ const handleCkickFunctions = evt => {
 
   //Math;
   if (evt.target.textContent === '=') {
+    console.log(parse('12.23 * 96.3'));
     if (secondNumber === '') secondNumber = firstNumber;
     if (firstNumber === '') firstNumber = '0';
 
