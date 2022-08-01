@@ -136,17 +136,15 @@ const handleCkickFunctions = evt => {
   // Percents in numbers
   if (evt.target.textContent === '%') {
     if (firstNumber !== '' && secondNumber === '') {
-      // console.log((parse(firstNumber) * 1) / 100);
-      // calcFirstNumber.textContent = (Number(firstNumber) * 1) / 100;
       if (Math.sign(parse(firstNumber)) === -1) {
         console.log('this');
         firstNumber = `(${(parse(firstNumber) * 1) / 100})`;
         calcFirstNumber.textContent = firstNumber;
-        // result = calcFirstNumber.textContent;
+
         return;
       }
       calcFirstNumber.textContent = (parse(firstNumber) * 1) / 100;
-      // result = calcFirstNumber.textContent;
+
       firstNumber = calcFirstNumber.textContent;
       return;
     } else {
@@ -154,12 +152,12 @@ const handleCkickFunctions = evt => {
         console.log('this');
         secondNumber = `(${(parse(secondNumber) * 1) / 100})`;
         calcSecondNumber.textContent = secondNumber;
-        // result = calcSecondNumber.textContent;
+
         return;
       }
-      // calcSecondNumber.textContent = (Number(secondNumber) * 1) / 100;
+
       calcSecondNumber.textContent = (parse(secondNumber) * 1) / 100;
-      // result = calcSecondNumber.textContent;
+
       secondNumber = calcSecondNumber.textContent;
       return;
     }
@@ -193,7 +191,6 @@ const handleCkickFunctions = evt => {
 
   //Math;
   if (evt.target.textContent === '=') {
-    console.log(parse('12.23 * 96.3'));
     if (secondNumber === '') secondNumber = firstNumber;
     if (firstNumber === '') firstNumber = '0';
 
