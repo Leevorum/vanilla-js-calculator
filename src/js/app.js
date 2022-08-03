@@ -126,6 +126,7 @@ const handleClickFunctions = evt => {
     }
     return;
   }
+
   // Percents in numbers
   if (evt.target.textContent === '%') {
     if (firstNumber !== '' && secondNumber === '') {
@@ -179,9 +180,17 @@ const handleClickFunctions = evt => {
     clearAll();
     calcSign.textContent = '0';
   }
-
+  if (
+    ((firstNumber === '' || firstNumber === '0') &&
+      sign !== '' &&
+      secondNumber === '') ||
+    (firstNumber !== '' && sign === '' && secondNumber === '')
+  ) {
+    return;
+  }
   //Math;
   if (evt.target.textContent === '=') {
+    console.log(firstNumber);
     if (secondNumber === '') secondNumber = firstNumber;
     if (firstNumber === '') firstNumber = '0';
 
