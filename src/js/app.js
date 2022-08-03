@@ -105,7 +105,6 @@ const handleClickFunctions = evt => {
   // Function +-/
   if (evt.target.textContent === '+/-') {
     if (firstNumber !== '' && secondNumber !== '') {
-      console.log(firstNumber);
       if (Math.sign(secondNumber) === -1) {
         secondNumber = String(Math.abs(secondNumber));
         calcSecondNumber.textContent = secondNumber;
@@ -131,7 +130,6 @@ const handleClickFunctions = evt => {
   if (evt.target.textContent === '%') {
     if (firstNumber !== '' && secondNumber === '') {
       if (Math.sign(parse(firstNumber)) === -1) {
-        console.log('this');
         firstNumber = `(${(parse(firstNumber) * 1) / 100})`;
         calcFirstNumber.textContent = firstNumber;
 
@@ -143,7 +141,6 @@ const handleClickFunctions = evt => {
       return;
     } else {
       if (Math.sign(parse(secondNumber)) === -1) {
-        console.log('this');
         secondNumber = `(${(parse(secondNumber) * 1) / 100})`;
         calcSecondNumber.textContent = secondNumber;
 
@@ -223,6 +220,7 @@ const handleClickFunctions = evt => {
   calcSign.textContent = '';
 };
 
+const handleKeyboardNubmers = evt => {};
 //Clear function
 const clearAll = () => {
   firstNumber = '';
