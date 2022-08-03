@@ -19,7 +19,7 @@ let accumulator = '';
 
 export default function app() {
   calculatorNumbers.addEventListener('click', handleClickNumbers);
-  calculatorFunctions.addEventListener('click', handleCkickFunctions);
+  calculatorFunctions.addEventListener('click', handleClickFunctions);
 }
 
 function parse(str) {
@@ -103,7 +103,7 @@ const handleClickNumbers = evt => {
   }
 };
 
-const handleCkickFunctions = evt => {
+const handleClickFunctions = evt => {
   if (evt.target.nodeName !== 'BUTTON') {
     return;
   }
