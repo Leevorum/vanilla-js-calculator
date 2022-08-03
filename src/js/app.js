@@ -32,19 +32,13 @@ const handleClickNumbers = evt => {
   }
 
   if (firstNumber.length + secondNumber.length + result.length > 10) {
-    console.log('maxlenth limit!!!');
-    console.log(firstNumber.length + secondNumber.length + result.length);
     calculatorViewWrapper.classList.add('large-font');
   }
   if (firstNumber.length + secondNumber.length + result.length > 20) {
-    console.log('maxlenth limit!!!');
-    console.log(firstNumber.length + secondNumber.length + result.length);
     calculatorViewWrapper.classList.add('medium-font');
     calculatorViewWrapper.classList.remove('large-font');
   }
   if (firstNumber.length + secondNumber.length + result.length > 28) {
-    console.log('maxlenth limit!!!');
-    console.log(firstNumber.length + secondNumber.length + result.length);
     calculatorViewWrapper.classList.add('small-font');
     calculatorViewWrapper.classList.remove('medium-font');
   }
