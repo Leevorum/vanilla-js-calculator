@@ -1,6 +1,7 @@
 import getRefs from './refs';
 import { calculatorState } from './app';
 import parse from './parse';
+import clearAll from './clearFunction';
 
 const { calcFirstNumber, calcSecondNumber, calcSign } = getRefs();
 let {
