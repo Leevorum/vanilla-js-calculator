@@ -24,6 +24,7 @@ export default function app() {
   calculatorFunctions.addEventListener('click', handleClickFunctions);
   document.addEventListener('keydown', handleKeyboardNubmers);
   document.addEventListener('keydown', handleKeyBoardFunctions);
+  document.addEventListener('keyup', hanldeKeyUp);
 }
 
 function parse(str) {
@@ -34,6 +35,8 @@ const handleClickNumbers = evt => {
   if (evt.target.nodeName !== 'BUTTON') {
     return;
   }
+  const trimEvt = evt.target.textContent.trim();
+
   if (firstNumber.length + secondNumber.length + result.length > 10) {
     calculatorViewWrapper.classList.add('large-font');
   }
@@ -52,10 +55,10 @@ const handleClickNumbers = evt => {
   //Set first number if second number and sign are empty
   if (secondNumber === '' && sign === '') {
     //Prevent few 0
-    if (firstNumber === '0' && evt.target.textContent === '0') {
+    if (firstNumber === '0' && trimEvt === '0') {
       return;
     }
-    if (firstNumber === '0' && evt.target.textContent !== '.') {
+    if (firstNumber === '0' && trimEvt !== '.') {
       firstNumber = '';
     }
     //Delete 0 from calcViev
@@ -63,35 +66,29 @@ const handleClickNumbers = evt => {
       calcFirstNumber.textContent = '';
     }
 
-    if (
-      evt.target.textContent === '.' &&
-      calcFirstNumber.textContent.indexOf('.') >= 0
-    ) {
+    if (trimEvt === '.' && calcFirstNumber.textContent.indexOf('.') >= 0) {
       // Only one dot in calcView
       return;
     }
     //Set First number
-    firstNumber += evt.target.textContent;
-    calcFirstNumber.textContent += evt.target.textContent;
+    firstNumber += trimEvt;
+    calcFirstNumber.textContent += trimEvt;
   } else {
     //Set second number
 
     //Prevent few 0
-    if (secondNumber === '0' && evt.target.textContent === '0') {
+    if (secondNumber === '0' && trimEvt === '0') {
       return;
     }
-    if (secondNumber === '0' && evt.target.textContent !== '.') {
+    if (secondNumber === '0' && trimEvt !== '.') {
       secondNumber = '';
     }
-    if (
-      evt.target.textContent === '.' &&
-      calcSecondNumber.textContent.indexOf('.') >= 0
-    ) {
+    if (trimEvt === '.' && calcSecondNumber.textContent.indexOf('.') >= 0) {
       // Only one dot in calcView
       return;
     }
-    secondNumber += evt.target.textContent;
-    calcSecondNumber.textContent += evt.target.textContent;
+    secondNumber += trimEvt;
+    calcSecondNumber.textContent += trimEvt;
     if (accumulator !== '') {
       accumulator += sign;
       accumulator += secondNumber;
@@ -104,8 +101,10 @@ const handleClickFunctions = evt => {
     return;
   }
 
+  const trimEvt = evt.target.textContent.trim();
+
   // Function +-/
-  if (evt.target.textContent === '+/-') {
+  if (trimEvt === '+/-') {
     if (firstNumber !== '' && secondNumber !== '') {
       if (Math.sign(secondNumber) === -1) {
         secondNumber = String(Math.abs(secondNumber));
@@ -130,7 +129,7 @@ const handleClickFunctions = evt => {
   }
 
   // Percents in numbers
-  if (evt.target.textContent === '%') {
+  if (trimEvt === '%') {
     if (firstNumber !== '' && secondNumber === '') {
       if (Math.sign(parse(firstNumber)) === -1) {
         firstNumber = `(${(parse(firstNumber) * 1) / 100})`;
@@ -158,11 +157,7 @@ const handleClickFunctions = evt => {
   }
 
   // Set sign
-  if (
-    evt.target.textContent !== '=' &&
-    evt.target.textContent !== 'AC' &&
-    evt.target.textContent !== '+/-'
-  ) {
+  if (trimEvt !== '=' && trimEvt !== 'AC' && trimEvt !== '+/-') {
     //Concat string for multiple math operations
     if (firstNumber !== '' && secondNumber !== '' && sign !== '') {
       accumulator = firstNumber + sign + secondNumber;
@@ -172,13 +167,13 @@ const handleClickFunctions = evt => {
       calcFirstNumber.textContent = firstNumber;
       calcSecondNumber.textContent = '';
     }
-    sign = evt.target.textContent;
+    sign = trimEvt;
     calcSign.textContent = sign;
     return;
   }
 
   // AC button
-  if (evt.target.textContent === 'AC') {
+  if (trimEvt === 'AC') {
     clearAll();
     calcSign.textContent = '0';
   }
@@ -191,7 +186,7 @@ const handleClickFunctions = evt => {
     return;
   }
   //Math;
-  if (evt.target.textContent === '=') {
+  if (trimEvt === '=') {
     if (secondNumber === '') secondNumber = firstNumber;
     if (firstNumber === '') firstNumber = '0';
 
@@ -254,6 +249,11 @@ const handleClickFunctions = evt => {
 
 const handleKeyboardNubmers = evt => {
   if (numbersArray.includes(evt.key)) {
+    if (document.querySelector(`[data-action="${evt.key}"]`)) {
+      document
+        .querySelector(`[data-action="${evt.key}"]`)
+        .classList.add('btn-active');
+    }
     if (firstNumber.length + secondNumber.length + result.length > 10) {
       calculatorViewWrapper.classList.add('large-font');
     }
@@ -317,6 +317,14 @@ const handleKeyboardNubmers = evt => {
 
 const handleKeyBoardFunctions = evt => {
   if (functionsArray.includes(evt.key)) {
+    if (evt.key === 'Enter') {
+      document.querySelector(`[data-action="="]`).classList.add('btn-active');
+      return;
+    }
+    document
+      .querySelector(`[data-action="${evt.key}"]`)
+      .classList.add('btn-active');
+
     // Percents in numbers
     if (evt.key === '%') {
       if (firstNumber !== '' && secondNumber === '') {
@@ -435,6 +443,16 @@ const handleKeyBoardFunctions = evt => {
     sign = '';
     calcSign.textContent = '';
   }
+};
+
+const hanldeKeyUp = evt => {
+  if (evt.key === 'Enter') {
+    document.querySelector(`[data-action="="]`).classList.remove('btn-active');
+    return;
+  }
+  document
+    .querySelector(`[data-action="${evt.key}"]`)
+    .classList.remove('btn-active');
 };
 
 //Clear function
