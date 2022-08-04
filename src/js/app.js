@@ -319,11 +319,11 @@ const handleKeyBoardFunctions = evt => {
   if (functionsArray.includes(evt.key)) {
     if (evt.key === 'Enter') {
       document.querySelector(`[data-action="="]`).classList.add('btn-active');
-      return;
+    } else {
+      document
+        .querySelector(`[data-action="${evt.key}"]`)
+        .classList.add('btn-active');
     }
-    document
-      .querySelector(`[data-action="${evt.key}"]`)
-      .classList.add('btn-active');
 
     // Percents in numbers
     if (evt.key === '%') {
