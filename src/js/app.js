@@ -37,7 +37,7 @@ const handleClickNumbers = evt => {
   }
   const trimEvt = evt.target.textContent.trim();
 
-  if (firstNumber.length + secondNumber.length + result.length > 10) {
+  if (firstNumber.length + secondNumber.length + result.length > 7) {
     calculatorViewWrapper.classList.add('large-font');
   }
   if (firstNumber.length + secondNumber.length + result.length > 20) {
@@ -54,16 +54,19 @@ const handleClickNumbers = evt => {
   }
   //Set first number if second number and sign are empty
   if (secondNumber === '' && sign === '') {
-    //Prevent few 0
-    if (firstNumber === '0' && trimEvt === '0') {
-      return;
+    if (firstNumber === '' && trimEvt === '.') {
+      firstNumber = '0.';
     }
+    //Delete 0 from calcViev
     if (firstNumber === '0' && trimEvt !== '.') {
       firstNumber = '';
     }
-    //Delete 0 from calcViev
     if (firstNumber === '') {
       calcFirstNumber.textContent = '';
+    }
+    //Prevent few 0
+    if (firstNumber === '0' && trimEvt === '0') {
+      return;
     }
 
     if (trimEvt === '.' && calcFirstNumber.textContent.indexOf('.') >= 0) {
@@ -75,14 +78,24 @@ const handleClickNumbers = evt => {
     calcFirstNumber.textContent += trimEvt;
   } else {
     //Set second number
+    //
+    if (secondNumber === '0' && trimEvt !== '.') {
+      secondNumber = trimEvt;
 
+      calcSecondNumber.textContent = secondNumber;
+      return;
+    }
+    if (secondNumber === '' && trimEvt === '.') {
+      secondNumber = '0.';
+
+      calcSecondNumber.textContent += secondNumber;
+      return;
+    }
     //Prevent few 0
     if (secondNumber === '0' && trimEvt === '0') {
       return;
     }
-    if (secondNumber === '0' && trimEvt !== '.') {
-      secondNumber = '';
-    }
+
     if (trimEvt === '.' && calcSecondNumber.textContent.indexOf('.') >= 0) {
       // Only one dot in calcView
       return;
@@ -106,8 +119,8 @@ const handleClickFunctions = evt => {
   // Function +-/
   if (trimEvt === '+/-') {
     if (firstNumber !== '' && secondNumber !== '') {
-      if (Math.sign(secondNumber) === -1) {
-        secondNumber = String(Math.abs(secondNumber));
+      if (Math.sign(parse(secondNumber)) === -1) {
+        secondNumber = String(Math.abs(parse(secondNumber)));
         calcSecondNumber.textContent = secondNumber;
 
         return;
@@ -118,8 +131,8 @@ const handleClickFunctions = evt => {
         return;
       }
     }
-    if (Math.sign(firstNumber) === -1) {
-      firstNumber = String(Math.abs(firstNumber));
+    if (Math.sign(parse(firstNumber)) === -1) {
+      firstNumber = String(Math.abs(parse(firstNumber)));
       calcFirstNumber.textContent = firstNumber;
     } else {
       firstNumber = `(${String(-firstNumber)})`;
@@ -203,8 +216,8 @@ const handleClickFunctions = evt => {
         calcSign.textContent = '';
         return;
       }
-      if (!Number.isInteger(result)) {
-        result = result.toFixed(5);
+      if (!Number.isInteger(result) && String(result).length > 7) {
+        result = parseFloat(result.toFixed(5));
       }
       calcFirstNumber.textContent = result;
       firstNumber = calcFirstNumber.textContent;
@@ -228,8 +241,8 @@ const handleClickFunctions = evt => {
         calcSign.textContent = '';
         return;
       }
-      if (!Number.isInteger(result)) {
-        result = result.toFixed(5);
+      if (!Number.isInteger(result) && String(result).length > 7) {
+        result = parseFloat(result.toFixed(5));
       }
       calcFirstNumber.textContent = result;
       firstNumber = calcFirstNumber.textContent;
@@ -254,7 +267,7 @@ const handleKeyboardNubmers = evt => {
         .querySelector(`[data-action="${evt.key}"]`)
         .classList.add('btn-active');
     }
-    if (firstNumber.length + secondNumber.length + result.length > 10) {
+    if (firstNumber.length + secondNumber.length + result.length > 7) {
       calculatorViewWrapper.classList.add('large-font');
     }
     if (firstNumber.length + secondNumber.length + result.length > 20) {
@@ -273,15 +286,19 @@ const handleKeyboardNubmers = evt => {
     //Set first number if second number and sign are empty
     if (secondNumber === '' && sign === '') {
       //Prevent few 0
-      if (firstNumber === '0' && evt.key === '0') {
-        return;
+      if (firstNumber === '' && evt.key === '.') {
+        firstNumber = '0.';
       }
+      //Delete 0 from calcViev
       if (firstNumber === '0' && evt.key !== '.') {
         firstNumber = '';
       }
-      //Delete 0 from calcViev
       if (firstNumber === '') {
         calcFirstNumber.textContent = '';
+      }
+      //Prevent few 0
+      if (firstNumber === '0' && evt.key === '0') {
+        return;
       }
 
       if (evt.key === '.' && calcFirstNumber.textContent.indexOf('.') >= 0) {
@@ -293,14 +310,24 @@ const handleKeyboardNubmers = evt => {
       calcFirstNumber.textContent += evt.key;
     } else {
       //Set second number
+      //
+      if (secondNumber === '0' && evt.key !== '.') {
+        secondNumber = evt.key;
 
+        calcSecondNumber.textContent = secondNumber;
+        return;
+      }
+      if (secondNumber === '' && evt.key === '.') {
+        secondNumber = '0.';
+
+        calcSecondNumber.textContent += secondNumber;
+        return;
+      }
       //Prevent few 0
       if (secondNumber === '0' && evt.key === '0') {
         return;
       }
-      if (secondNumber === '0' && evt.key !== '.') {
-        secondNumber = '';
-      }
+
       if (evt.key === '.' && calcSecondNumber.textContent.indexOf('.') >= 0) {
         // Only one dot in calcView
         return;
@@ -399,8 +426,8 @@ const handleKeyBoardFunctions = evt => {
           calcSign.textContent = '';
           return;
         }
-        if (!Number.isInteger(result)) {
-          result = result.toFixed(5);
+        if (!Number.isInteger(result) && String(result).length > 7) {
+          result = parseFloat(result.toFixed(5));
         }
 
         calcFirstNumber.textContent = result;
@@ -425,8 +452,9 @@ const handleKeyBoardFunctions = evt => {
           calcSign.textContent = '';
           return;
         }
-        if (!Number.isInteger(result)) {
-          result = result.toFixed(5);
+
+        if (!Number.isInteger(result) && String(result).length > 7) {
+          result = parseFloat(result.toFixed(5));
         }
         calcFirstNumber.textContent = result;
         firstNumber = calcFirstNumber.textContent;
@@ -446,13 +474,17 @@ const handleKeyBoardFunctions = evt => {
 };
 
 const hanldeKeyUp = evt => {
-  if (evt.key === 'Enter') {
-    document.querySelector(`[data-action="="]`).classList.remove('btn-active');
-    return;
+  if (numbersArray.includes(evt.key) || functionsArray.includes(evt.key)) {
+    if (evt.key === 'Enter') {
+      document
+        .querySelector(`[data-action="="]`)
+        .classList.remove('btn-active');
+      return;
+    }
+    document
+      .querySelector(`[data-action="${evt.key}"]`)
+      .classList.remove('btn-active');
   }
-  document
-    .querySelector(`[data-action="${evt.key}"]`)
-    .classList.remove('btn-active');
 };
 
 //Clear function
