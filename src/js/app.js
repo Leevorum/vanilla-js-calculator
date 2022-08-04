@@ -10,6 +10,8 @@ const {
   calcSign,
   calculatorViewWrapper,
 } = getRefs();
+const numbersArray = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.'];
+const functionsArray = ['Clear', 'Enter', '=', '/', '*', '-', '+', '%'];
 
 let firstNumber = '';
 let secondNumber = '';
@@ -20,6 +22,8 @@ let accumulator = '';
 export default function app() {
   calculatorNumbers.addEventListener('click', handleClickNumbers);
   calculatorFunctions.addEventListener('click', handleClickFunctions);
+  document.addEventListener('keydown', handleKeyboardNubmers);
+  document.addEventListener('keydown', handleKeyBoardFunctions);
 }
 
 function parse(str) {
@@ -30,7 +34,6 @@ const handleClickNumbers = evt => {
   if (evt.target.nodeName !== 'BUTTON') {
     return;
   }
-
   if (firstNumber.length + secondNumber.length + result.length > 10) {
     calculatorViewWrapper.classList.add('large-font');
   }
@@ -42,7 +45,6 @@ const handleClickNumbers = evt => {
     calculatorViewWrapper.classList.add('small-font');
     calculatorViewWrapper.classList.remove('medium-font');
   }
-
   // Clear result after Math for new values.
   if (result !== '' && sign === '') {
     clearAll();
@@ -190,12 +192,22 @@ const handleClickFunctions = evt => {
   }
   //Math;
   if (evt.target.textContent === '=') {
-    console.log(firstNumber);
     if (secondNumber === '') secondNumber = firstNumber;
     if (firstNumber === '') firstNumber = '0';
 
     if (accumulator !== '') {
       result = parse(accumulator);
+      if (result === Infinity) {
+        result = 'Error';
+        calcFirstNumber.textContent = result;
+        firstNumber = '0';
+        accumulator = '';
+        secondNumber = '';
+        calcSecondNumber.textContent = '';
+        sign = '';
+        calcSign.textContent = '';
+        return;
+      }
       if (!Number.isInteger(result)) {
         result = result.toFixed(5);
       }
@@ -210,6 +222,17 @@ const handleClickFunctions = evt => {
       return;
     } else {
       result = parse(firstNumber + sign + secondNumber);
+      if (result === Infinity) {
+        result = 'Error';
+        calcFirstNumber.textContent = result;
+        firstNumber = '0';
+        accumulator = '';
+        secondNumber = '';
+        calcSecondNumber.textContent = '';
+        sign = '';
+        calcSign.textContent = '';
+        return;
+      }
       if (!Number.isInteger(result)) {
         result = result.toFixed(5);
       }
@@ -229,7 +252,191 @@ const handleClickFunctions = evt => {
   calcSign.textContent = '';
 };
 
-const handleKeyboardNubmers = evt => {};
+const handleKeyboardNubmers = evt => {
+  if (numbersArray.includes(evt.key)) {
+    if (firstNumber.length + secondNumber.length + result.length > 10) {
+      calculatorViewWrapper.classList.add('large-font');
+    }
+    if (firstNumber.length + secondNumber.length + result.length > 20) {
+      calculatorViewWrapper.classList.add('medium-font');
+      calculatorViewWrapper.classList.remove('large-font');
+    }
+    if (firstNumber.length + secondNumber.length + result.length > 28) {
+      calculatorViewWrapper.classList.add('small-font');
+      calculatorViewWrapper.classList.remove('medium-font');
+    }
+    // Clear resul
+    // Clear result after Math for new values.
+    if (result !== '' && sign === '') {
+      clearAll();
+    }
+    //Set first number if second number and sign are empty
+    if (secondNumber === '' && sign === '') {
+      //Prevent few 0
+      if (firstNumber === '0' && evt.key === '0') {
+        return;
+      }
+      if (firstNumber === '0' && evt.key !== '.') {
+        firstNumber = '';
+      }
+      //Delete 0 from calcViev
+      if (firstNumber === '') {
+        calcFirstNumber.textContent = '';
+      }
+
+      if (evt.key === '.' && calcFirstNumber.textContent.indexOf('.') >= 0) {
+        // Only one dot in calcView
+        return;
+      }
+      //Set First number
+      firstNumber += evt.key;
+      calcFirstNumber.textContent += evt.key;
+    } else {
+      //Set second number
+
+      //Prevent few 0
+      if (secondNumber === '0' && evt.key === '0') {
+        return;
+      }
+      if (secondNumber === '0' && evt.key !== '.') {
+        secondNumber = '';
+      }
+      if (evt.key === '.' && calcSecondNumber.textContent.indexOf('.') >= 0) {
+        // Only one dot in calcView
+        return;
+      }
+      secondNumber += evt.key;
+      calcSecondNumber.textContent += evt.key;
+      if (accumulator !== '') {
+        accumulator += sign;
+        accumulator += secondNumber;
+      }
+    }
+  }
+};
+
+const handleKeyBoardFunctions = evt => {
+  if (functionsArray.includes(evt.key)) {
+    // Percents in numbers
+    if (evt.key === '%') {
+      if (firstNumber !== '' && secondNumber === '') {
+        if (Math.sign(parse(firstNumber)) === -1) {
+          firstNumber = `(${(parse(firstNumber) * 1) / 100})`;
+          calcFirstNumber.textContent = firstNumber;
+
+          return;
+        }
+        calcFirstNumber.textContent = (parse(firstNumber) * 1) / 100;
+
+        firstNumber = calcFirstNumber.textContent;
+        return;
+      } else {
+        if (Math.sign(parse(secondNumber)) === -1) {
+          secondNumber = `(${(parse(secondNumber) * 1) / 100})`;
+          calcSecondNumber.textContent = secondNumber;
+
+          return;
+        }
+
+        calcSecondNumber.textContent = (parse(secondNumber) * 1) / 100;
+
+        secondNumber = calcSecondNumber.textContent;
+        return;
+      }
+    }
+
+    // Set sign
+    if (evt.key !== '=' && evt.key !== 'Clear' && evt.key !== 'Enter') {
+      //Concat string for multiple math operations
+      if (firstNumber !== '' && secondNumber !== '' && sign !== '') {
+        accumulator = firstNumber + sign + secondNumber;
+        firstNumber = firstNumber + sign + secondNumber;
+
+        secondNumber = '';
+        calcFirstNumber.textContent = firstNumber;
+        calcSecondNumber.textContent = '';
+      }
+      sign = evt.key;
+      calcSign.textContent = sign;
+      return;
+    }
+
+    // AC button
+    if (evt.key === 'Clear') {
+      clearAll();
+    }
+    if (
+      ((firstNumber === '' || firstNumber === '0') &&
+        sign !== '' &&
+        secondNumber === '') ||
+      (firstNumber !== '' && sign === '' && secondNumber === '')
+    ) {
+      return;
+    }
+    //Math;
+    if (evt.key === '=' || evt.key === 'Enter') {
+      if (secondNumber === '') secondNumber = firstNumber;
+      if (firstNumber === '') firstNumber = '0';
+
+      if (accumulator !== '') {
+        result = parse(accumulator);
+        if (result === Infinity) {
+          result = 'Error';
+          calcFirstNumber.textContent = result;
+          firstNumber = '0';
+          accumulator = '';
+          secondNumber = '';
+          calcSecondNumber.textContent = '';
+          sign = '';
+          calcSign.textContent = '';
+          return;
+        }
+        if (!Number.isInteger(result)) {
+          result = result.toFixed(5);
+        }
+
+        calcFirstNumber.textContent = result;
+        firstNumber = calcFirstNumber.textContent;
+        accumulator = calcFirstNumber.textContent;
+        secondNumber = '';
+        calcSecondNumber.textContent = '';
+        sign = '';
+        calcSign.textContent = '';
+
+        return;
+      } else {
+        result = parse(firstNumber + sign + secondNumber);
+        if (result === Infinity) {
+          result = 'Error';
+          calcFirstNumber.textContent = result;
+          firstNumber = '0';
+          accumulator = '';
+          secondNumber = '';
+          calcSecondNumber.textContent = '';
+          sign = '';
+          calcSign.textContent = '';
+          return;
+        }
+        if (!Number.isInteger(result)) {
+          result = result.toFixed(5);
+        }
+        calcFirstNumber.textContent = result;
+        firstNumber = calcFirstNumber.textContent;
+        accumulator = calcFirstNumber.textContent;
+        secondNumber = '';
+        calcSecondNumber.textContent = '';
+        sign = '';
+        calcSign.textContent = '';
+      }
+    }
+
+    secondNumber = '';
+    calcSecondNumber.textContent = '';
+    sign = '';
+    calcSign.textContent = '';
+  }
+};
+
 //Clear function
 const clearAll = () => {
   firstNumber = '';
