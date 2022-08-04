@@ -192,7 +192,7 @@ const handleClickFunctions = evt => {
 
     if (accumulator !== '') {
       result = parse(accumulator);
-      if (result === Infinity) {
+      if (result === Infinity || result === -Infinity) {
         result = 'Error';
         calcFirstNumber.textContent = result;
         firstNumber = '0';
@@ -217,7 +217,7 @@ const handleClickFunctions = evt => {
       return;
     } else {
       result = parse(firstNumber + sign + secondNumber);
-      if (result === Infinity) {
+      if (result === Infinity || result === -Infinity) {
         result = 'Error';
         calcFirstNumber.textContent = result;
         firstNumber = '0';
@@ -388,7 +388,7 @@ const handleKeyBoardFunctions = evt => {
 
       if (accumulator !== '') {
         result = parse(accumulator);
-        if (result === Infinity) {
+        if (result === Infinity || result === -Infinity) {
           result = 'Error';
           calcFirstNumber.textContent = result;
           firstNumber = '0';
@@ -414,7 +414,7 @@ const handleKeyBoardFunctions = evt => {
         return;
       } else {
         result = parse(firstNumber + sign + secondNumber);
-        if (result === Infinity) {
+        if (result === Infinity || result === -Infinity) {
           result = 'Error';
           calcFirstNumber.textContent = result;
           firstNumber = '0';
