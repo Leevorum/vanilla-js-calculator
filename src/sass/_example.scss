@@ -49,12 +49,14 @@
   height: 90px;
   border-radius: 10px;
 }
-.zero-btn {
+.double-btn {
   width: 180px;
 }
-.btn-wrapper {
-  width: 90px;
-  height: 90px;
+button:active {
+  background-color: rgb(187, 187, 187);
+}
+.btn-active {
+  background-color: rgb(187, 187, 187);
 }
 
 .upper-functions .button {
@@ -62,6 +64,18 @@
 }
 .right-functions .button {
   background-color: rgb(242, 163, 60);
+}
+.upper-functions .button:active {
+  background-color: rgb(172, 172, 172);
+}
+.right-functions .button:active {
+  background-color: rgb(238, 190, 127);
+}
+.upper-functions .button.btn-active {
+  background-color: rgb(172, 172, 172);
+}
+.right-functions .button.btn-active {
+  background-color: rgb(238, 190, 127);
 }
 
 .lowerBtnsWrapper {
