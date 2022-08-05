@@ -1,4 +1,4 @@
-import getRefs, { calcState } from './refs';
+import getRefs, { calcState } from '../refs';
 
 const {
   calcFirstNumber,

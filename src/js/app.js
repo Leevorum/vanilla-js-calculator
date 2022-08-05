@@ -10,9 +10,6 @@ const { container, calculatorNumbers, calculatorFunctions } = getRefs();
 
 export default function app() {
   calculatorNumbers.addEventListener('click', handleClickNumbers);
-  // calculatorNumbers.addEventListener('click', evt => {
-  //   handleClickNumbers(evt, calcState);
-  // });
   calculatorFunctions.addEventListener('click', handleClickFunctions);
   document.addEventListener('keydown', handleKeyboardNubmers);
   document.addEventListener('keydown', handleKeyBoardFunctions);
