@@ -94,6 +94,7 @@ function handleClickFunctions(evt) {
     clearAll();
     calcSign.textContent = '0';
   }
+  //Prevent calculations if numbers are empty
   if (
     ((calcState.firstNumber === '' || calcState.firstNumber === '0') &&
       calcState.sign !== '' &&

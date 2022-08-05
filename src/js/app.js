@@ -1,5 +1,5 @@
 import dragElement from './dragElement';
-import getRefs, { calcState } from './refs';
+import getRefs from './refs';
 import handleClickNumbers from './handleClickNumbers';
 import handleClickFunctions from './handleClickFunctions';
 import handleKeyboardNubmers from './handleKeyboardNubmers';
